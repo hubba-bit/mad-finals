@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutterappfinalscalculator/numKeyButton.dart';
@@ -17,7 +18,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final height = ((mediaQuery.size.height * .66) / 5) - 10;
+    final height = ((mediaQuery.size.height * .75) / 6) - 10;
     final width = (mediaQuery.size.width / 4) - (50 / 4);
     return Scaffold(
       backgroundColor: Colors.blue[100],
@@ -28,17 +29,17 @@ class _CalculatorPageState extends State<CalculatorPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             SizedBox(
-                height: mediaQuery.size.height * .30,
+                height: mediaQuery.size.height * .20,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     Text(inputString, style: TextStyle(fontSize: 48)),
                     SizedBox(
-                      height: 20,
+                      height: 5,
                     ),
                     Text(
                       numberStr,
@@ -46,6 +47,81 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     ),
                   ],
                 )),
+            Row(
+              children: <Widget>[
+                SizedBox(
+                  height: height,
+                  width: width,
+                  child: NumKeyButton(
+                    text: 'π',
+                    color: Colors.white,
+                    onPressed: () {
+                      _clearEntry();
+                      _setNumber("3.1415926535897932");
+                    },
+                    borderRadius: 5.0,
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                SizedBox(
+                  height: height,
+                  width: width,
+                  child: NumKeyButton(
+                    text: '√',
+                    color: Colors.white,
+                    onPressed: () {
+                      final sqRt = sqrt(double.parse(numberStr)).toString();
+                      _clearEntry();
+                      _setNumber(sqRt);
+                    },
+                    borderRadius: 5.0,
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                SizedBox(
+                  height: height,
+                  width: width,
+                  child: NumKeyButton(
+                    text: '^2',
+                    color: Colors.white,
+                    onPressed: () {
+                      final power2 =
+                          (double.parse(numberStr) * double.parse(numberStr))
+                              .toString();
+                      _clearEntry();
+                      _setNumber(power2);
+                    },
+                    borderRadius: 5.0,
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                SizedBox(
+                  height: height,
+                  width: width,
+                  child: NumKeyButton(
+                    text: '!',
+                    color: Colors.white,
+                    onPressed: () {
+                      final factorial =
+                          _getFactorial(double.parse(numberStr).floor())
+                              .toString();
+                      _clearEntry();
+                      _setNumber(factorial);
+                    },
+                    borderRadius: 5.0,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 14.0,
+            ),
             Row(
               children: <Widget>[
                 SizedBox(
@@ -98,7 +174,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     text: '7',
                     color: Colors.white,
                     onPressed: () {
-                      _setNumber(7);
+                      _setNumber('7');
                     },
                     borderRadius: 5.0,
                   ),
@@ -113,7 +189,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     text: '8',
                     color: Colors.white,
                     onPressed: () {
-                      _setNumber(8);
+                      _setNumber('8');
                     },
                     borderRadius: 5.0,
                   ),
@@ -128,7 +204,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     text: '9',
                     color: Colors.white,
                     onPressed: () {
-                      _setNumber(9);
+                      _setNumber('9');
                     },
                     borderRadius: 5.0,
                   ),
@@ -160,7 +236,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     text: '4',
                     color: Colors.white,
                     onPressed: () {
-                      _setNumber(4);
+                      _setNumber('4');
                     },
                     borderRadius: 5.0,
                   ),
@@ -175,7 +251,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     text: '5',
                     color: Colors.white,
                     onPressed: () {
-                      _setNumber(5);
+                      _setNumber('5');
                     },
                     borderRadius: 5.0,
                   ),
@@ -190,7 +266,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     text: '6',
                     color: Colors.white,
                     onPressed: () {
-                      _setNumber(6);
+                      _setNumber('6');
                     },
                     borderRadius: 5.0,
                   ),
@@ -222,7 +298,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     text: '1',
                     color: Colors.white,
                     onPressed: () {
-                      _setNumber(1);
+                      _setNumber('1');
                     },
                     borderRadius: 5.0,
                   ),
@@ -237,7 +313,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     text: '2',
                     color: Colors.white,
                     onPressed: () {
-                      _setNumber(2);
+                      _setNumber('2');
                     },
                     borderRadius: 5.0,
                   ),
@@ -252,7 +328,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     text: '3',
                     color: Colors.white,
                     onPressed: () {
-                      _setNumber(3);
+                      _setNumber('3');
                     },
                     borderRadius: 5.0,
                   ),
@@ -284,7 +360,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     text: '0',
                     color: Colors.white,
                     onPressed: () {
-                      _setNumber(0);
+                      _setNumber('0');
                     },
                     borderRadius: 5.0,
                   ),
@@ -323,13 +399,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
     );
   }
 
-  void _setNumber(int number) {
+  void _setNumber(String number) {
     setState(() {
       if (this.numberStr == "0" || reset) {
         this.numberStr = "";
         reset = false;
       }
-      this.numberStr += number.toString();
+      this.numberStr += number;
+      _removeDotZero();
     });
   }
 
@@ -404,5 +481,21 @@ class _CalculatorPageState extends State<CalculatorPage> {
     reset = true;
     numberStr = lastValue;
     inputString = '${inputString.substring(0, inputString.length - 1)}$opr';
+    _removeDotZero();
+  }
+
+  void _removeDotZero() {
+    if (double.parse(numberStr) == double.parse(numberStr).floor()) {
+      numberStr = double.parse(numberStr).floor().toString();
+    }
+  }
+
+  int _getFactorial(int number) {
+    int result = 1;
+    for (var i = number; i > 0; i--) {
+      result *= i;
+    }
+
+    return result;
   }
 }
